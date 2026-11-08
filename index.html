@@ -1,1045 +1,419 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Samira Assemlali — Fullstack Developer</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg:        #fdf8f5;
-    --bg2:       #fef4ef;
-    --bg3:       #fff9f7;
-    --surface:   #ffffff;
-    --surface2:  #fdf0eb;
-    --border:    #f0d9d0;
-    --border2:   #e8c4b8;
-    --rose:      #e8547a;
-    --rose2:     #d43d64;
-    --rose-pale: rgba(232,84,122,0.08);
-    --rose-glow: rgba(232,84,122,0.18);
-    --blush:     #f7a8bb;
-    --peach:     #f4a46a;
-    --lavender:  #c9a8e0;
-    --text:      #2d1f2a;
-    --text2:     #8a6370;
-    --text3:     #bfa0aa;
-    --gold:      #d4965a;
-    --serif:     'Playfair Display', serif;
-    --sans:      'DM Sans', sans-serif;
-    --mono:      'DM Mono', monospace;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 14px;
-    line-height: 1.6;
-    overflow-x: hidden;
-  }
-
-  /* ── PETAL/NOISE TEXTURE OVERLAY ── */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-    opacity: 0.4;
-  }
-
-  /* ── DECORATIVE BLOBS ── */
-  .blob {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.35;
-  }
-  .blob-1 { width: 420px; height: 420px; background: radial-gradient(circle, #f7b8cc, transparent 70%); top: -120px; right: -80px; }
-  .blob-2 { width: 320px; height: 320px; background: radial-gradient(circle, #c9a8e0, transparent 70%); bottom: 10%; left: -60px; }
-  .blob-3 { width: 250px; height: 250px; background: radial-gradient(circle, #f4a46a, transparent 70%); top: 50%; right: 5%; }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 3rem;
-    height: 64px;
-    background: rgba(253,248,245,0.88);
-    backdrop-filter: blur(16px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .nav-logo {
-    font-family: var(--serif);
-    font-style: italic;
-    font-weight: 700;
-    font-size: 18px;
-    color: var(--rose);
-    letter-spacing: 0.02em;
-  }
-
-  .nav-logo span {
-    color: var(--text2);
-    font-style: normal;
-    font-weight: 400;
-    font-size: 13px;
-    font-family: var(--sans);
-    margin-left: 4px;
-  }
-
-  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-
-  .nav-links a {
-    color: var(--text2);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: 0.04em;
-    position: relative;
-    transition: color 0.25s;
-  }
-
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -3px; left: 0; right: 0;
-    height: 1.5px;
-    background: var(--rose);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.3s ease;
-  }
-
-  .nav-links a:hover { color: var(--rose); }
-  .nav-links a:hover::after { transform: scaleX(1); }
-
-  /* ── WRAPPER ── */
-  .wrapper {
-    position: relative;
-    z-index: 1;
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 2rem;
-  }
-
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    padding-top: 64px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  /* Decorative circles */
-  #hero::before {
-    content: '';
-    position: absolute;
-    width: 500px; height: 500px;
-    border-radius: 50%;
-    border: 1px dashed rgba(232,84,122,0.15);
-    top: 50%; left: 55%;
-    transform: translate(-50%, -50%);
-    animation: spin 40s linear infinite;
-  }
-
-  #hero::after {
-    content: '';
-    position: absolute;
-    width: 340px; height: 340px;
-    border-radius: 50%;
-    border: 1px dashed rgba(201,168,224,0.2);
-    top: 50%; left: 55%;
-    transform: translate(-50%, -50%);
-    animation: spin 28s linear infinite reverse;
-  }
-
-  @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-
-  .hero-inner {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 5rem;
-    align-items: center;
-    width: 100%;
-  }
-
-  .hero-eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    background: var(--rose-pale);
-    border: 1px solid rgba(232,84,122,0.2);
-    border-radius: 40px;
-    padding: 5px 14px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--rose);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    margin-bottom: 1.75rem;
-  }
-
-  .hero-eyebrow::before {
-    content: '✦';
-    font-size: 9px;
-  }
-
-  .hero-name {
-    font-family: var(--serif);
-    font-size: clamp(3rem, 5.5vw, 5rem);
-    font-weight: 900;
-    line-height: 1.0;
-    color: var(--text);
-    margin-bottom: 0.4rem;
-  }
-
-  .hero-name em {
-    font-style: italic;
-    color: var(--rose);
-    display: block;
-  }
-
-  .hero-role {
-    font-family: var(--mono);
-    font-size: 13px;
-    color: var(--text2);
-    margin-bottom: 1.75rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .hero-role::before {
-    content: '';
-    display: inline-block;
-    width: 20px; height: 1px;
-    background: var(--blush);
-  }
-
-  .cursor {
-    display: inline-block;
-    width: 8px; height: 14px;
-    background: var(--rose);
-    border-radius: 1px;
-    animation: blink 1s step-end infinite;
-    vertical-align: middle;
-  }
-
-  @keyframes blink { 50% { opacity: 0; } }
-
-  .hero-desc {
-    font-size: 14px;
-    color: var(--text2);
-    max-width: 460px;
-    line-height: 1.9;
-    margin-bottom: 2.25rem;
-  }
-
-  .hero-btns {
-    display: flex;
-    gap: 0.875rem;
-    flex-wrap: wrap;
-  }
-
-  .btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 0.7rem 1.5rem;
-    font-family: var(--sans);
-    font-size: 13px;
-    font-weight: 500;
-    text-decoration: none;
-    border-radius: 40px;
-    transition: all 0.25s;
-    cursor: pointer;
-    border: none;
-  }
-
-  .btn-primary {
-    background: var(--rose);
-    color: #fff;
-    box-shadow: 0 4px 20px rgba(232,84,122,0.3);
-  }
-
-  .btn-primary:hover {
-    background: var(--rose2);
-    transform: translateY(-2px);
-    box-shadow: 0 8px 28px rgba(232,84,122,0.38);
-  }
-
-  .btn-outline {
-    background: transparent;
-    color: var(--text);
-    border: 1.5px solid var(--border2);
-  }
-
-  .btn-outline:hover {
-    border-color: var(--rose);
-    color: var(--rose);
-    transform: translateY(-2px);
-  }
-
-  /* ── PROFILE AVATAR ── */
-  .hero-avatar { position: relative; flex-shrink: 0; }
-
-  .avatar-wrap {
-    width: 230px;
-    height: 230px;
-    position: relative;
-  }
-
-  /* Rotating ring */
-  .avatar-ring {
-    position: absolute;
-    inset: -14px;
-    border-radius: 50%;
-    border: 1.5px dashed var(--blush);
-    animation: spin 20s linear infinite;
-  }
-
-  /* Dot on ring */
-  .avatar-ring::after {
-    content: '✦';
-    position: absolute;
-    top: 6px; left: 50%;
-    transform: translateX(-50%);
-    color: var(--rose);
-    font-size: 10px;
-  }
-
-  .avatar-circle {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: linear-gradient(145deg, #fce8ef, #f3d8e8);
-    border: 2px solid rgba(232,84,122,0.2);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: all 0.3s;
-  }
-
-  .avatar-circle:hover { box-shadow: 0 0 0 6px rgba(232,84,122,0.1); }
-
-  .avatar-circle svg { fill: var(--blush); width: 56px; height: 56px; }
-
-  .avatar-label {
-    font-size: 11px;
-    color: var(--rose);
-    font-family: var(--mono);
-    opacity: 0.7;
-  }
-
-  /* floating flowers */
-  .float-deco {
-    position: absolute;
-    font-size: 20px;
-    animation: float 3s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  .float-deco:nth-child(1) { top: -10px; right: 0px; animation-delay: 0s; }
-  .float-deco:nth-child(2) { bottom: 10px; left: -12px; animation-delay: 1.2s; font-size: 14px; }
-  .float-deco:nth-child(3) { top: 30px; left: -20px; animation-delay: 2s; font-size: 16px; }
-
-  @keyframes float {
-    0%,100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-8px) rotate(10deg); }
-  }
-
-  .status-pill {
-    position: absolute;
-    bottom: -6px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 30px;
-    padding: 5px 14px;
-    font-size: 11px;
-    font-weight: 500;
-    color: var(--text2);
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-  }
-
-  .status-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #52c479;
-    box-shadow: 0 0 6px #52c479;
-    animation: pulse 2s ease-in-out infinite;
-  }
-
-  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.4; } }
-
-  /* ── SECTION SHARED ── */
-  section { padding: 6rem 0; }
-
-  .section-header {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    margin-bottom: 3rem;
-  }
-
-  .section-num {
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 3rem;
-    color: rgba(232,84,122,0.12);
-    font-weight: 900;
-    line-height: 1;
-    user-select: none;
-  }
-
-  .section-title {
-    font-family: var(--serif);
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-
-  .section-title em { font-style: italic; color: var(--rose); }
-
-  .section-line {
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, var(--border), transparent);
-    margin-left: 1rem;
-  }
-
-  /* ── SKILLS ── */
-  #skills { background: var(--bg2); }
-
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1rem;
-  }
-
-  .skill-card {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    transition: all 0.25s;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .skill-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    border-radius: 16px 16px 0 0;
-  }
-
-  .skill-card.frontend::before { background: linear-gradient(90deg, var(--rose), var(--blush)); }
-  .skill-card.backend::before  { background: linear-gradient(90deg, var(--lavender), #8acde0); }
-  .skill-card.database::before { background: linear-gradient(90deg, var(--peach), var(--gold)); }
-  .skill-card.devops::before   { background: linear-gradient(90deg, #8cd4b8, #5ec4aa); }
-
-  .skill-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 32px rgba(232,84,122,0.1);
-    border-color: var(--border2);
-  }
-
-  .skill-cat {
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--text3);
-    margin-bottom: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .skill-cat-dot {
-    width: 6px; height: 6px;
-    border-radius: 50%;
-  }
-
-  .frontend .skill-cat-dot { background: var(--rose); }
-  .backend  .skill-cat-dot { background: var(--lavender); }
-  .database .skill-cat-dot { background: var(--peach); }
-  .devops   .skill-cat-dot { background: #5ec4aa; }
-
-  .skill-items { display: flex; flex-wrap: wrap; gap: 7px; }
-
-  .skill-tag {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 4px 10px;
-    font-size: 12px;
-    color: var(--text2);
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
-  .skill-tag:hover {
-    background: var(--rose-pale);
-    border-color: rgba(232,84,122,0.3);
-    color: var(--rose);
-  }
-
-  /* ── PROJECTS ── */
-  #projects { background: var(--bg3); }
-
-  .gh-banner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: linear-gradient(135deg, var(--rose-pale), rgba(201,168,224,0.1));
-    border: 1.5px solid rgba(232,84,122,0.18);
-    border-radius: 12px;
-    padding: 0.875rem 1.25rem;
-    margin-bottom: 2rem;
-    font-size: 12.5px;
-    color: var(--text2);
-  }
-
-  .gh-banner code { color: var(--rose); font-family: var(--mono); font-size: 12px; }
-  .gh-banner a { color: var(--rose); text-decoration: none; font-weight: 500; }
-  .gh-banner a:hover { text-decoration: underline; }
-
-  .projects-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-    gap: 1rem;
-  }
-
-  .project-card {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    padding: 1.5rem;
-    transition: all 0.25s;
-    text-decoration: none;
-    display: block;
-    color: inherit;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .project-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at top right, rgba(232,84,122,0.06), transparent 60%);
-    opacity: 0;
-    transition: opacity 0.3s;
-  }
-
-  .project-card:hover {
-    border-color: rgba(232,84,122,0.3);
-    transform: translateY(-4px);
-    box-shadow: 0 12px 36px rgba(232,84,122,0.1);
-  }
-
-  .project-card:hover::after { opacity: 1; }
-
-  .project-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    margin-bottom: 0.875rem;
-  }
-
-  .project-icon {
-    width: 38px; height: 38px;
-    background: var(--rose-pale);
-    border: 1px solid rgba(232,84,122,0.2);
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .project-icon svg { width: 18px; height: 18px; fill: var(--rose); }
-
-  .proj-link-icon { color: var(--text3); transition: color 0.2s; }
-  .project-card:hover .proj-link-icon { color: var(--rose); }
-
-  .project-name {
-    font-family: var(--serif);
-    font-size: 16px;
-    font-weight: 700;
-    color: var(--text);
-    margin-bottom: 0.4rem;
-  }
-
-  .project-desc {
-    font-size: 12.5px;
-    color: var(--text2);
-    line-height: 1.75;
-    margin-bottom: 1.25rem;
-    min-height: 42px;
-  }
-
-  .project-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .project-lang {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 12px;
-    color: var(--text2);
-  }
-
-  .lang-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-  }
-
-  .project-stats {
-    display: flex;
-    gap: 10px;
-    font-size: 11.5px;
-    color: var(--text3);
-  }
-
-  .stat-item { display: flex; align-items: center; gap: 4px; }
-
-  .loading-state {
-    grid-column: 1/-1;
-    text-align: center;
-    padding: 3.5rem;
-    color: var(--text3);
-    font-size: 13px;
-    font-family: var(--mono);
-  }
-
-  .loading-dots::after {
-    content: '...';
-    animation: dots 1.5s infinite;
-  }
-  @keyframes dots {
-    0%,33% { content:'.'; }
-    34%,66% { content:'..'; }
-    67%,100% { content:'...'; }
-  }
-
-  .error-state {
-    grid-column: 1/-1;
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-left: 3px solid var(--blush);
-    border-radius: 12px;
-    padding: 1.5rem;
-    font-size: 12.5px;
-    color: var(--text2);
-  }
-
-  .error-state .err-title { color: var(--rose); margin-bottom: 0.5rem; font-weight: 600; }
-
-  /* ── CONTACT ── */
-  #contact { background: var(--bg2); }
-
-  .contact-intro {
-    font-size: 15px;
-    color: var(--text2);
-    max-width: 480px;
-    line-height: 1.8;
-    margin-bottom: 2.5rem;
-  }
-
-  .contact-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .contact-card {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 1.25rem 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    text-decoration: none;
-    color: inherit;
-    transition: all 0.25s;
-  }
-
-  .contact-card:hover {
-    border-color: rgba(232,84,122,0.35);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(232,84,122,0.1);
-  }
-
-  .contact-icon {
-    width: 42px; height: 42px;
-    border-radius: 12px;
-    background: var(--rose-pale);
-    border: 1px solid rgba(232,84,122,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-size: 18px;
-  }
-
-  .contact-label {
-    font-size: 10.5px;
-    color: var(--text3);
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    font-weight: 600;
-    margin-bottom: 2px;
-  }
-
-  .contact-val {
-    font-size: 13px;
-    color: var(--text);
-    font-weight: 500;
-  }
-
-  .contact-card.highlight {
-    background: linear-gradient(135deg, var(--rose), var(--rose2));
-    border-color: var(--rose2);
-    color: #fff;
-  }
-
-  .contact-card.highlight .contact-label { color: rgba(255,255,255,0.65); }
-  .contact-card.highlight .contact-val { color: #fff; }
-
-  .contact-card.highlight:hover {
-    box-shadow: 0 10px 28px rgba(232,84,122,0.4);
-    border-color: var(--rose2);
-  }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2.25rem;
-    text-align: center;
-    font-size: 13px;
-    color: var(--text3);
-    position: relative;
-    z-index: 1;
-  }
-
-  footer .heart { color: var(--rose); }
-  footer em { font-family: var(--serif); font-style: italic; color: var(--text2); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    nav { padding: 0 1.25rem; }
-    .nav-links { display: none; }
-    .hero-inner { grid-template-columns: 1fr; text-align: center; }
-    .hero-avatar { order: -1; display: flex; justify-content: center; }
-    .hero-eyebrow { margin: 0 auto 1.75rem; }
-    .hero-desc { margin: 0 auto 2rem; }
-    .hero-btns { justify-content: center; }
-    .contact-grid { grid-template-columns: 1fr; }
-    .hero-name { font-size: 2.75rem; }
-    #hero::before, #hero::after { display: none; }
-  }
-</style>
-</head>
-<body>
-
-<div class="blob blob-1"></div>
-<div class="blob blob-2"></div>
-<div class="blob blob-3"></div>
-
-<!-- NAV -->
-<nav>
-  <div class="nav-logo">Samira<span>— dev</span></div>
-  <ul class="nav-links">
-    <li><a href="#hero">home</a></li>
-    <li><a href="#skills">skills</a></li>
-    <li><a href="#projects">projects</a></li>
-    <li><a href="#contact">contact</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="wrapper">
-    <div class="hero-inner">
-      <div class="hero-text">
-        <div class="hero-eyebrow">available for hire</div>
-        <h1 class="hero-name">Samira<br><em>Assemlali</em></h1>
-        <p class="hero-role">fullstack_developer<span class="cursor"></span></p>
-        <p class="hero-desc">
-          Crafting beautiful, end-to-end digital experiences — from delightful UIs to resilient backend systems. I believe great software is thoughtful, human, and a little bit pretty.
-        </p>
-        <div class="hero-btns">
-          <a href="#projects" class="btn btn-primary">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-            view projects
-          </a>
-          <a href="#" download="Samira_Assemlali_CV.pdf" class="btn btn-outline" id="cv-btn">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-            download cv
-          </a>
-          <a href="#contact" class="btn btn-outline">say hello ✉</a>
-        </div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#080d16">
+    <meta
+      name="description"
+      content="Samira Assemlali is a junior web developer building thoughtful digital experiences with React, JavaScript, PHP, Laravel, and MySQL."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Samira Assemlali — Junior Web Developer">
+    <meta
+      property="og:description"
+      content="Thoughtful interfaces and practical web applications, built with care."
+    >
+    <link rel="canonical" href="https://portofolio-wgbe.vercel.app/">
+    <link rel="stylesheet" href="style.css">
+    <title>Samira Assemlali — Junior Web Developer</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="wordmark" href="#home" aria-label="Samira Assemlali, home">
+          <span class="wordmark-mark" aria-hidden="true">sa.</span>
+          <span class="wordmark-name">Samira Assemlali</span>
+        </a>
+
+        <nav class="main-nav" aria-label="Main navigation">
+          <a href="#about">About</a>
+          <a href="#stack">Stack</a>
+          <a href="#projects">Projects</a>
+          <a href="#experience">Experience</a>
+          <a href="#contact">Contact</a>
+        </nav>
+
+        <a class="availability-link" href="#contact">
+          <span class="availability-dot" aria-hidden="true"></span>
+          Open to opportunities
+        </a>
       </div>
+    </header>
 
-      <div class="hero-avatar">
-        <div class="avatar-wrap">
-          <div class="avatar-ring"></div>
-          <div class="avatar-circle" id="avatar-area">
-            <img src="https://avatars.githubusercontent.com/samira-2002-code" alt="Samira Assemlali" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" onerror="this.outerHTML='<svg viewBox=\'0 0 24 24\' style=\'fill:var(--blush);width:56px;height:56px\'><path d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'/><circle cx=\'12\' cy=\'7\' r=\'4\'/></svg>'">
+    <main id="main">
+      <section class="hero" id="home" aria-labelledby="hero-title">
+        <img
+          class="hero-photo"
+          src="profile-optimized.jpg"
+          alt=""
+          aria-hidden="true"
+          width="900"
+          height="1297"
+          fetchpriority="high"
+        >
+        <div class="hero-grid container">
+          <div class="hero-copy">
+            <p class="eyebrow">A thoughtful approach to the web</p>
+            <h1 id="hero-title">Samira <span>Assemlali</span></h1>
+            <p class="hero-role">Junior Web Developer</p>
+            <p class="hero-intro">
+              I build considered digital experiences, bringing together clear,
+              welcoming interfaces and useful web applications.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#projects">
+                View projects <span aria-hidden="true">↗</span>
+              </a>
+              <a class="button button-secondary" href="#contact">Contact me</a>
+            </div>
+            <p class="hero-footnote">Curious by nature. Thoughtful by design.</p>
           </div>
-          <div class="float-deco">🌸</div>
-          <div class="float-deco">✦</div>
-          <div class="float-deco">🌷</div>
-        </div>
-        <div class="status-pill">
-          <div class="status-dot"></div>
-          open to work
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<!-- SKILLS -->
-<section id="skills">
-  <div class="wrapper">
-    <div class="section-header">
-      <span class="section-num">01</span>
-      <h2 class="section-title">my <em>tech stack</em></h2>
-      <div class="section-line"></div>
-    </div>
-    <div class="skills-grid">
-      <div class="skill-card frontend">
-        <div class="skill-cat"><span class="skill-cat-dot"></span>frontend</div>
-        <div class="skill-items">
-          <span class="skill-tag">React</span>
-          <span class="skill-tag">Next.js</span>
-          <span class="skill-tag">TypeScript</span>
-          <span class="skill-tag">Tailwind CSS</span>
-          <span class="skill-tag">HTML5</span>
-          <span class="skill-tag">CSS3</span>
         </div>
-      </div>
-      <div class="skill-card backend">
-        <div class="skill-cat"><span class="skill-cat-dot"></span>backend</div>
-        <div class="skill-items">
-          <span class="skill-tag">Node.js</span>
-          <span class="skill-tag">Express</span>
-          <span class="skill-tag">NestJS</span>
-          <span class="skill-tag">REST APIs</span>
-          <span class="skill-tag">GraphQL</span>
-          <span class="skill-tag">Python</span>
-        </div>
-      </div>
-      <div class="skill-card database">
-        <div class="skill-cat"><span class="skill-cat-dot"></span>database</div>
-        <div class="skill-items">
-          <span class="skill-tag">PostgreSQL</span>
-          <span class="skill-tag">MongoDB</span>
-          <span class="skill-tag">Redis</span>
-          <span class="skill-tag">MySQL</span>
-          <span class="skill-tag">Prisma</span>
-        </div>
-      </div>
-      <div class="skill-card devops">
-        <div class="skill-cat"><span class="skill-cat-dot"></span>devops & tools</div>
-        <div class="skill-items">
-          <span class="skill-tag">Docker</span>
-          <span class="skill-tag">Git</span>
-          <span class="skill-tag">GitHub Actions</span>
-          <span class="skill-tag">Linux</span>
-          <span class="skill-tag">Vercel</span>
-          <span class="skill-tag">AWS</span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+      </section>
 
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="wrapper">
-    <div class="section-header">
-      <span class="section-num">02</span>
-      <h2 class="section-title">my <em>projects</em></h2>
-      <div class="section-line"></div>
-    </div>
-
-    <div class="gh-banner">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--rose);stroke:var(--rose)"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-      Fetching live from GitHub &mdash; username: <code id="username-display">samira-2002-code</code>
-      &nbsp;·&nbsp;
-      <a href="https://github.com/samira-2002-code" target="_blank">view profile ↗</a>
-    </div>
-
-    <div class="projects-grid" id="projects-grid">
-      <div class="loading-state">
-        <div class="loading-dots">✦ fetching repositories</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-  <div class="wrapper">
-    <div class="section-header">
-      <span class="section-num">03</span>
-      <h2 class="section-title">let's <em>connect</em></h2>
-      <div class="section-line"></div>
-    </div>
-    <p class="contact-intro">I'd love to hear about your project, collaboration ideas, or just have a lovely chat about tech. My inbox is always open ✉</p>
-    <div class="contact-grid">
-      <a href="https://github.com/samira-2002-code" target="_blank" class="contact-card">
-        <div class="contact-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">github</div>
-          <div class="contact-val">github.com/samira-2002-code</div>
-        </div>
-      </a>
-      <a href="mailto:samiraassemlali2@email.com" class="contact-card">
-        <div class="contact-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--rose)" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">email</div>
-          <div class="contact-val">samira.assemlali@email.com</div>
-        </div>
-      </a>
-      <a href="https://www.linkedin.com/in/samira-assemlali-b65bb330b/?skipRedirect=true" target="_blank" class="contact-card">
-        <div class="contact-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--rose)"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/><circle cx="4" cy="4" r="2"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">linkedin</div>
-          <div class="contact-val">in/samira-assemlali</div>
-        </div>
-      </a>
-      <a href="#" class="contact-card highlight" id="cv-footer-btn" download>
-        <div class="contact-icon" style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.3)">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        </div>
-        <div>
-          <div class="contact-label">resume</div>
-          <div class="contact-val">Download CV ✦</div>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<footer>
-  crafted with <span class="heart">♥</span> by <em>Samira Assemlali</em> — fullstack developer
-</footer>
-
-<script>
-const GITHUB_USERNAME = 'samira-2002-code';
-
-const langColors = {
-  JavaScript: '#f7df1e', TypeScript: '#3178c6', Python: '#3572A5',
-  HTML: '#e34c26', CSS: '#563d7c', Java: '#b07219', Go: '#00ADD8',
-  Rust: '#dea584', PHP: '#4F5D95', Ruby: '#701516', 'C++': '#f34b7d',
-  C: '#555555', Shell: '#89e051', Vue: '#41b883', Dart: '#00B4AB',
-  Kotlin: '#A97BFF', Swift: '#ffac45'
-};
-
-async function fetchRepos() {
-  const grid = document.getElementById('projects-grid');
-  try {
-    const res = await fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?sort=updated&per_page=12&type=public`);
-    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-    const repos = await res.json();
-    const filtered = repos.filter(r => !r.fork).slice(0, 9);
-
-    if (!filtered.length) {
-      grid.innerHTML = `<div class="error-state"><div class="err-title">No public repos found</div>Check that your GitHub username is correct and repos are public.</div>`;
-      return;
-    }
-
-    grid.innerHTML = '';
-    filtered.forEach(repo => {
-      const color = langColors[repo.language] || '#bfa0aa';
-      const desc = repo.description || 'No description provided.';
-      const card = document.createElement('a');
-      card.className = 'project-card';
-      card.href = repo.html_url;
-      card.target = '_blank';
-      card.rel = 'noopener noreferrer';
-      card.innerHTML = `
-        <div class="project-header">
-          <div class="project-icon">
-            <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+      <section class="section" id="about" aria-labelledby="about-title">
+        <div class="container">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">01</span>
+            <p class="section-kicker">A little about me</p>
+            <h2 id="about-title">Curiosity, craft, <em>and clean code.</em></h2>
           </div>
-          <svg class="proj-link-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-        </div>
-        <div class="project-name">${repo.name}</div>
-        <div class="project-desc">${desc.length > 90 ? desc.slice(0,90)+'…' : desc}</div>
-        <div class="project-footer">
-          <div class="project-lang">
-            <span class="lang-dot" style="background:${color}"></span>
-            ${repo.language || 'Unknown'}
+
+          <div class="about-grid">
+            <div class="about-copy">
+              <p>
+                I’m Samira, a <strong>junior web developer</strong> who enjoys
+                making the web feel both useful and considered. I like starting
+                with the people behind a problem, then shaping a clear path from
+                the first interaction to the details that make a product feel
+                complete.
+              </p>
+              <p>
+                My project work spans responsive front-end interfaces and
+                full-stack applications, using React alongside PHP, Laravel,
+                and MySQL. I’m continuing to grow through hands-on projects,
+                thoughtful iteration, and a curiosity for how things work.
+              </p>
+            </div>
+            <aside class="about-aside">
+              <p class="about-aside-label">What matters to me</p>
+              <p>
+                Accessible details, purposeful design, and code that makes a
+                project easier to understand and build on.
+              </p>
+            </aside>
           </div>
-          <div class="project-stats">
-            <span class="stat-item">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-              ${repo.stargazers_count}
-            </span>
-            <span class="stat-item">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 9v1a5 5 0 0 0 5 5h1"/><path d="m15 15-3 3 3 3"/></svg>
-              ${repo.forks_count}
+        </div>
+      </section>
+
+      <section class="section stack-section" id="stack" aria-labelledby="stack-title">
+        <div class="container">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">02</span>
+            <p class="section-kicker">Tools I work with</p>
+            <h2 id="stack-title">A practical <em>toolkit.</em></h2>
+          </div>
+          <p class="stack-intro">
+            The technologies I use to shape interfaces and bring web projects
+            to life.
+          </p>
+
+          <div class="stack-grid" aria-label="Technology stack">
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">Re</span>
+              <span class="stack-name">React<span class="stack-type">Interface</span></span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">JS</span>
+              <span class="stack-name">JavaScript<span class="stack-type">Language</span></span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">H5</span>
+              <span class="stack-name">HTML<span class="stack-type">Markup</span></span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">C3</span>
+              <span class="stack-name">CSS<span class="stack-type">Styling</span></span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">PHP</span>
+              <span class="stack-name">PHP<span class="stack-type">Backend</span></span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">La</span>
+              <span class="stack-name">Laravel<span class="stack-type">Framework</span></span>
+            </div>
+            <div class="stack-item">
+              <span class="stack-symbol" aria-hidden="true">My</span>
+              <span class="stack-name">MySQL<span class="stack-type">Database</span></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="projects" aria-labelledby="projects-title">
+        <div class="container">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">03</span>
+            <p class="section-kicker">Selected work</p>
+            <h2 id="projects-title">Projects with <em>purpose.</em></h2>
+          </div>
+          <div class="projects-toolbar">
+            <p class="projects-intro" id="projects-status" aria-live="polite">
+              Loading all public projects from GitHub…
+            </p>
+            <a
+              class="projects-all"
+              href="https://github.com/samira-2002-code?tab=repositories"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Browse GitHub <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+
+          <div class="projects-grid" id="projects-grid">
+            <a
+              class="project-card"
+              href="https://github.com/samira-2002-code/bde-events-fullStack"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="BDE Events project on GitHub, opens in a new tab"
+            >
+              <div class="project-topline">
+                <span class="project-index">PROJECT / 01</span>
+                <span class="project-kind">Campus platform</span>
+              </div>
+              <h3>BDE Events</h3>
+              <p>
+                A campus events platform for ENAA where students can discover
+                events, reserve a place, and access digital tickets.
+              </p>
+              <div class="project-bottom">
+                <div class="project-tags" aria-label="Technologies">
+                  <span>Laravel</span>
+                  <span>React</span>
+                  <span>REST API</span>
+                </div>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a
+              class="project-card"
+              href="https://github.com/samira-2002-code/Easy_Marcket"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Easy Market project on GitHub, opens in a new tab"
+            >
+              <div class="project-topline">
+                <span class="project-index">PROJECT / 02</span>
+                <span class="project-kind">Marketplace</span>
+              </div>
+              <h3>Easy Market</h3>
+              <p>
+                A marketplace concept for listing items to sell or exchange,
+                with searchable listings, filters, and detailed item views.
+              </p>
+              <div class="project-bottom">
+                <div class="project-tags" aria-label="Technologies">
+                  <span>Laravel</span>
+                  <span>React</span>
+                  <span>REST API</span>
+                </div>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a
+              class="project-card"
+              href="https://github.com/samira-2002-code/DarAnawat_stage"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Dar Anawat project on GitHub, opens in a new tab"
+            >
+              <div class="project-topline">
+                <span class="project-index">PROJECT / 03</span>
+                <span class="project-kind">Guesthouse website</span>
+              </div>
+              <h3>Dar Anawat</h3>
+              <p>
+                A guesthouse website designed to introduce the property, help
+                visitors explore rooms, and guide them toward reservations.
+              </p>
+              <div class="project-bottom">
+                <div class="project-tags" aria-label="Technologies">
+                  <span>Laravel</span>
+                  <span>PHP</span>
+                </div>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+
+            <a
+              class="project-card"
+              href="https://github.com/samira-2002-code/PharmaFEFO"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="PharmaFEFO project on GitHub, opens in a new tab"
+            >
+              <div class="project-topline">
+                <span class="project-index">PROJECT / 04</span>
+                <span class="project-kind">Academic project</span>
+              </div>
+              <h3>PharmaFEFO</h3>
+              <p>
+                A pharmacy stock-management project focused on FEFO inventory
+                handling, built with a custom PHP MVC structure.
+              </p>
+              <div class="project-bottom">
+                <div class="project-tags" aria-label="Technologies">
+                  <span>PHP 8</span>
+                  <span>MySQL</span>
+                  <span>MVC</span>
+                </div>
+                <span class="project-arrow" aria-hidden="true">↗</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section
+        class="section experience-section"
+        id="experience"
+        aria-labelledby="experience-title"
+      >
+        <div class="container">
+          <div class="section-heading">
+            <span class="section-number" aria-hidden="true">04</span>
+            <p class="section-kicker">Learning by building</p>
+            <h2 id="experience-title">Practical <em>experience.</em></h2>
+          </div>
+          <p class="experience-intro">
+            Project-based learning and practical application, grounded in the
+            work documented in my repositories.
+          </p>
+
+          <div class="experience-list">
+            <article class="experience-item">
+              <p class="experience-type">Training project</p>
+              <div>
+                <h3>Marketplace &amp; leave management applications</h3>
+                <p>
+                  Built project work including Easy Market, a marketplace
+                  developed as a training capstone, and TIME DNA, a leave
+                  management application for employee requests and manager/HR
+                  workflows.
+                </p>
+              </div>
+            </article>
+            <article class="experience-item">
+              <p class="experience-type">Academic project</p>
+              <div>
+                <h3>PharmaFEFO</h3>
+                <p>
+                  Applied PHP and MySQL to an academic pharmacy inventory
+                  project, using FEFO as its stock-management approach.
+                </p>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="contact" aria-labelledby="contact-title">
+        <div class="container contact-grid">
+          <div class="contact-copy">
+            <div class="section-heading">
+              <span class="section-number" aria-hidden="true">05</span>
+              <p class="section-kicker">Have something in mind?</p>
+              <h2 id="contact-title">Let’s make <em>it happen.</em></h2>
+            </div>
+            <p>
+              I’m open to opportunities and conversations about thoughtful
+              web projects. Find me through any of the links here.
+            </p>
+            <span class="contact-availability">
+              <span class="status-dot" aria-hidden="true"></span>
+              Available for opportunities
             </span>
           </div>
+
+          <div class="contact-links">
+            <a
+              class="contact-link"
+              href="mailto:samiraassemlali2@email.com"
+              aria-label="Email Samira Assemlali"
+            >
+              <span>
+                <span class="contact-link-label">Email</span>
+                <span class="contact-link-value">samiraassemlali2@email.com</span>
+              </span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a
+              class="contact-link"
+              href="tel:+212772827331"
+              aria-label="Call Samira Assemlali at plus 212 772 827331"
+            >
+              <span>
+                <span class="contact-link-label">Phone</span>
+                <span class="contact-link-value">+212 772 827331</span>
+              </span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a
+              class="contact-link"
+              href="https://wa.me/212772827331"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Message Samira Assemlali on WhatsApp, opens in a new tab"
+            >
+              <span>
+                <span class="contact-link-label">WhatsApp</span>
+                <span class="contact-link-value">Message me</span>
+              </span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a
+              class="contact-link"
+              href="https://www.linkedin.com/in/samira-assemlali-b65bb330b/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Samira Assemlali on LinkedIn, opens in a new tab"
+            >
+              <span>
+                <span class="contact-link-label">LinkedIn</span>
+                <span class="contact-link-value">Connect with me</span>
+              </span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+            <a
+              class="contact-link"
+              href="https://github.com/samira-2002-code"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Samira Assemlali on GitHub, opens in a new tab"
+            >
+              <span>
+                <span class="contact-link-label">GitHub</span>
+                <span class="contact-link-value">samira-2002-code</span>
+              </span>
+              <span class="contact-link-arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
         </div>
-      `;
-      grid.appendChild(card);
-    });
-  } catch(err) {
-    grid.innerHTML = `
-      <div class="error-state">
-        <div class="err-title">✦ Could not fetch repos</div>
-        <p>Username <code style="color:var(--rose)">${GITHUB_USERNAME}</code> — ${err.message}</p>
-        <p style="margin-top:0.5rem">Make sure your GitHub username is correct in the <code style="color:var(--rose)">GITHUB_USERNAME</code> const.</p>
-      </div>`;
-  }
-}
+      </section>
+    </main>
 
-fetchRepos();
-
-
-</script>
-</body>
+    <footer class="site-footer">
+      <div class="container">Made with care <span aria-hidden="true">✦</span> Samira Assemlali</div>
+    </footer>
+    <script src="projects.js" defer></script>
+  </body>
 </html>
