@@ -87,11 +87,7 @@ function startPortraitReveal() {
     return;
   }
 
-  if (typeof portrait.decode === "function") {
-    portrait.decode().then(reveal).catch(reveal);
-  } else {
-    reveal();
-  }
+  reveal();
 }
 
 function createTextElement(tagName, className, text) {
