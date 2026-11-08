@@ -1,6 +1,13 @@
 const GITHUB_USERNAME = "samira-2002-code";
 const projectsGrid = document.querySelector("#projects-grid");
 const projectsStatus = document.querySelector("#projects-status");
+const featuredProjectOrder = [
+  "bde-events-fullStack",
+  "Easy_Marcket",
+  "DarAnawat_stage",
+  "Leave_Management",
+  "PharmaFEFO",
+];
 const projectDetails = {
   DarAnawat_stage: {
     category: "Guesthouse website",
@@ -78,6 +85,9 @@ function createRepositoryCard(repository, index) {
 
   const card = document.createElement("a");
   card.className = "project-card";
+  if (index === 0) {
+    card.classList.add("project-card-featured");
+  }
   card.href = repositoryUrl.href;
   card.target = "_blank";
   card.rel = "noopener noreferrer";
@@ -153,12 +163,19 @@ async function loadRepositories() {
       }
     }
 
+    const featuredOrder = new Map(
+      featuredProjectOrder.map((name, index) => [name, index])
+    );
     const ownedProjects = repositories.filter(
       (repository) =>
         repository.owner?.login === GITHUB_USERNAME &&
         !repository.fork &&
         typeof repository.name === "string" &&
         typeof repository.html_url === "string"
+    ).sort(
+      (first, second) =>
+        (featuredOrder.get(first.name) ?? featuredProjectOrder.length) -
+        (featuredOrder.get(second.name) ?? featuredProjectOrder.length)
     );
     const cards = ownedProjects
       .map(createRepositoryCard)
@@ -172,7 +189,7 @@ async function loadRepositories() {
 
     projectsGrid.replaceChildren(...cards);
     projectsStatus.textContent =
-      `${cards.length} public projects, sorted by recent activity.`;
+      `${cards.length} public projects — selected work first, then recent projects.`;
   } catch (error) {
     console.error("Unable to load public GitHub repositories.", error);
     projectsStatus.textContent =
