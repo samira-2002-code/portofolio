@@ -66,11 +66,7 @@ function startPortraitReveal() {
     return;
   }
 
-  const reveal = () => {
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => hero.classList.add("portrait-ready"));
-    });
-  };
+  const reveal = () => hero.classList.add("portrait-ready");
 
   if (!portrait.complete) {
     portrait.addEventListener("load", reveal, { once: true });
