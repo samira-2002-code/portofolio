@@ -246,6 +246,8 @@ img {
   width: min(47vw, 660px);
   aspect-ratio: 1;
   border: 1px solid rgba(118, 169, 255, 0.17);
+  border-top-color: rgba(164, 196, 255, 0.88);
+  border-right-color: rgba(164, 196, 255, 0.46);
   border-radius: 50%;
   box-shadow: 0 0 0 34px rgba(118, 169, 255, 0.035), 0 0 0 78px rgba(118, 169, 255, 0.02);
   transform: translateY(-50%);
@@ -270,9 +272,15 @@ img {
     linear-gradient(to right, transparent 0%, #000 37%, #000 79%, transparent 100%),
     radial-gradient(ellipse 82% 91% at 65% 43%, #000 32%, transparent 100%);
   mask-composite: intersect;
-  clip-path: inset(0 0 100% 0);
-  animation: portrait-build 2.2s cubic-bezier(0.18, 0.72, 0.28, 1) 180ms both;
-  will-change: clip-path, filter;
+  clip-path: inset(0);
+}
+
+.hero.portrait-ready .hero-photo {
+  clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+  animation:
+    portrait-build 4.2s cubic-bezier(0.18, 0.72, 0.28, 1) both,
+    portrait-drift 13s ease-in-out 4.2s infinite alternate;
+  will-change: clip-path, filter, transform;
 }
 
 .hero-build-scan {
@@ -293,7 +301,10 @@ img {
   filter: drop-shadow(0 0 8px rgba(118, 169, 255, 0.8));
   opacity: 0;
   pointer-events: none;
-  animation: portrait-scan 2.2s cubic-bezier(0.18, 0.72, 0.28, 1) 180ms both;
+}
+
+.hero.portrait-ready .hero-build-scan {
+  animation: portrait-scan 4.2s cubic-bezier(0.18, 0.72, 0.28, 1) both;
 }
 
 .hero-grid {
@@ -1023,14 +1034,19 @@ img {
 
 @keyframes portrait-build {
   0% {
-    clip-path: inset(0 0 100% 0);
+    clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
     filter: grayscale(1) brightness(0.38) contrast(1.25);
   }
-  58% {
+  32% {
+    clip-path: polygon(0 0, 54% 0, 43% 100%, 0 100%);
+    filter: grayscale(0.86) brightness(0.48) contrast(1.2);
+  }
+  68% {
+    clip-path: polygon(0 0, 94% 0, 84% 100%, 0 100%);
     filter: grayscale(0.55) brightness(0.62) contrast(1.12);
   }
   100% {
-    clip-path: inset(0);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
     filter: grayscale(0.24) brightness(0.78) contrast(1.08);
   }
 }
@@ -1046,6 +1062,15 @@ img {
   100% {
     transform: translateY(640%);
     opacity: 0;
+  }
+}
+
+@keyframes portrait-drift {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(1.055);
   }
 }
 

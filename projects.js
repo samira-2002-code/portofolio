@@ -8,6 +8,8 @@ const featuredProjectOrder = [
   "Leave_Management",
   "PharmaFEFO",
 ];
+const hero = document.querySelector(".hero");
+const portrait = document.querySelector(".hero-photo");
 const projectDetails = {
   DarAnawat_stage: {
     category: "Guesthouse website",
@@ -58,6 +60,39 @@ const projectDetails = {
     technologies: ["PHP", "MySQL"],
   },
 };
+
+function startPortraitReveal() {
+  if (!hero || !portrait) {
+    return;
+  }
+
+  const reveal = () => {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => hero.classList.add("portrait-ready"));
+    });
+  };
+
+  if (!portrait.complete) {
+    portrait.addEventListener("load", reveal, { once: true });
+    portrait.addEventListener(
+      "error",
+      () => console.warn("The portfolio portrait could not be loaded."),
+      { once: true }
+    );
+    return;
+  }
+
+  if (portrait.naturalWidth === 0) {
+    console.warn("The portfolio portrait could not be loaded.");
+    return;
+  }
+
+  if (typeof portrait.decode === "function") {
+    portrait.decode().then(reveal).catch(reveal);
+  } else {
+    reveal();
+  }
+}
 
 function createTextElement(tagName, className, text) {
   const element = document.createElement(tagName);
@@ -197,4 +232,5 @@ async function loadRepositories() {
   }
 }
 
+startPortraitReveal();
 loadRepositories();
