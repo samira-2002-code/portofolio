@@ -60,6 +60,76 @@ const projectDetails = {
     technologies: ["PHP", "MySQL"],
   },
 };
+const projectDescriptions = {
+  portofolio:
+    "My personal portfolio, bringing together selected projects, the technologies I use, and ways to get in touch.",
+  "samira-2002-code":
+    "My developer profile and an overview of my work as a full-stack PHP web developer.",
+  EduSync:
+    "A school-management database project designed to organize an institution's information in a structured relational database.",
+  "neat-nitpick-port":
+    "A TypeScript project from my hands-on development practice. Visit the repository to explore its source and current scope.",
+  GamaVault:
+    "A JavaScript project from my hands-on development practice. Visit the repository to explore its source and current scope.",
+  linkUP1:
+    "A PHP web application built with Laravel. Explore the repository to see the implementation and its current features.",
+  "jury-challenge":
+    "An HTML challenge project created to practice building and presenting a focused web page.",
+  "SportQuiz-Master":
+    "A sports quiz project centered on answering questions and testing sports knowledge.",
+  "ArenaSync-V":
+    "A React application set up with Vite as the frontend for the ArenaSync project.",
+  "object-challenge":
+    "A programming challenge focused on working with objects and practicing core coding concepts.",
+  "ArenaSync-Gestionnaire-de-Tournois-Sportifs":
+    "A sports tournament-management project focused on organizing competitions.",
+  "NutriFlow-Votre-Coach-Nutrition-Wellness":
+    "A nutrition and wellness project presented as a personal coaching experience.",
+  Nutriflow:
+    "A nutrition and wellness project. Visit the repository to explore its implementation and current scope.",
+  "fun-chall":
+    "A JavaScript coding-practice project built around small challenges and experiments.",
+  calcule:
+    "A calculator-themed web exercise built with HTML. Visit the repository to explore the current implementation.",
+  FlowState:
+    "A JavaScript project from my hands-on development practice. Visit the repository to explore its source and current scope.",
+  "Inspiration-Blog-de-Voyage":
+    "A travel-inspiration blog project built with HTML, focused on presenting ideas for future trips.",
+  travel:
+    "A travel-themed web page styled with CSS.",
+  parking:
+    "A parking-themed web project built with HTML. Visit the repository to explore its current scope.",
+  "weather-app":
+    "A weather application project built with HTML. Visit the repository to explore its interface and implementation.",
+  "mini-html":
+    "A small HTML practice project for building and structuring web pages.",
+  "html-css":
+    "A collection of HTML and CSS practice focused on structuring and styling web pages.",
+  "poo-java":
+    "Java practice focused on object-oriented programming concepts.",
+  "console-java":
+    "Java exercises and small programs designed to run in the console.",
+  "class-java":
+    "Java practice focused on defining classes and applying object-oriented programming concepts.",
+  "problem-solving-java":
+    "Java exercises focused on practicing problem-solving and programming fundamentals.",
+  "java-":
+    "A Java learning project containing programming practice and experiments.",
+  "mini-projet1":
+    "A small JavaScript project created as part of hands-on web-development practice.",
+  challenge:
+    "A JavaScript coding challenge project for practicing and exploring programming concepts.",
+  "mini-projet":
+    "A small JavaScript project created as part of hands-on coding practice.",
+  "project-fin":
+    "An independent project from my development practice. Visit the repository to explore its source and scope.",
+  Functions_challenges:
+    "A set of programming exercises focused on practicing functions.",
+  enaaSAS:
+    "A JavaScript project from my hands-on development practice. Visit the repository to explore its source and current scope.",
+  "Chalenge-":
+    "A JavaScript coding challenge created to practice programming concepts.",
+};
 
 function startPortraitReveal() {
   if (!hero || !portrait) {
@@ -144,7 +214,8 @@ function createRepositoryCard(repository, index) {
     "",
     repository.description ||
       details?.description ||
-      "No description yet. Visit the repository to explore the project."
+      projectDescriptions[repository.name] ||
+      `${repository.language || "Independent"} project from my development practice. Visit the repository to explore its code and current scope.`
   );
 
   const bottom = document.createElement("div");
